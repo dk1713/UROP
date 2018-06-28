@@ -180,7 +180,7 @@ function main() {
 $(document).ready(main); //Load main when document is ready.
 
 /*
-    7.  Your final task is revamp this visualisations. For example, you may:
+    6.  Your final task is revamp this visualisations. For example, you may:
             -   Add notes.
             -   Change the colour scheme (luckily no one in our group is colour blind).
             -   Change the div layouts.
