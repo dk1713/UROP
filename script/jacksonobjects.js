@@ -8,7 +8,8 @@ var magenta = "#FF00FF",
     white = "rgb(255,255,255)",
     cyan = "rgb(0,146,146)", //1
     lilac = "rgb(182,109,255)", //2
-    orange = "rgb(219,209,0)"; //3
+    orange = "rgb(219,209,0)", //3
+    cherry = "rgb(213,0,50)"
 
 // Plot Utilities:
 /**
@@ -349,7 +350,7 @@ function Rectangle(x0, y0) {
     this.x0 = x0;
     this.y0 = y0;
 
-    this.gObject = function(color=cyan, centre=[0,0]) {
+    this.gObject = function(color=orange, centre=[0,0]) {
         var rectangle = {
             type: "scatter",
             mode: "lines",

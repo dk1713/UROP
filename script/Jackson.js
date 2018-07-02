@@ -46,6 +46,8 @@ function initCarte(type) {
         Plotly.newPlot("graph", computeBasis(x, y), layout);
     } else if (type === "#area"){
         Plotly.newPlot("graph", computeArea(x, y), layout);
+    } else if (type === "#polar"){
+        Plotly.newPlot("graph", computePolar(x, y), layout);
     }
     return;
 }
@@ -56,6 +58,11 @@ function initCarte(type) {
  */
 function computeBasis(x, y) {
     currentPoint = [x, y];
+
+    rho = Math.sqrt(x**2+y**2);
+    phi = Math.atan(x/y);
+    console.log(phi);
+
     dx = 1
     dy = 1
     if (x<0 && y>0){
@@ -81,13 +88,30 @@ function computeBasis(x, y) {
 
     var dominic = new Rectangle(x,y);
 
-
     var data = [
+        {
+            type: "scatter",
+            mode: "lines+text",
+            x: [x, x+dx/2, x+dx],
+            y: [y, y, y],
+            line: {color: orange, width: 3, dash: "solid"},
+            text: ["", "X̂ ", ""],
+            textfont: {color:black, size:16}
+        },
+        {
+            type: "scatter",
+            mode: "lines+text",
+            x: [x, x, x],
+            y: [y, y+dy/2, y+dy],
+            line: {color: orange, width: 3, dash: "solid"},
+            text: ["", "Ŷ ", ""],
+            textfont: {color:black, size:16}
+        },
         xVector.gObject(orange, 3),
         xVector.arrowHead(orange, 3),
-        yVector.gObject(lilac, 3),
-        yVector.arrowHead(lilac, 3),
-        dominic.gObject() //ONLY uncomment this line when task 3. is completed.
+        yVector.gObject(orange, 3),
+        yVector.arrowHead(orange, 3),
+        dominic.gObject(), //ONLY uncomment this line when task 3. is completed.
     ];
 
     return data;
@@ -144,7 +168,7 @@ function computeArea(x, y) {
             mode: "lines",
             x: [x,x+2*dx,x+2*dx,x,x],
             y: [y,y,y+2*dy,y+2*dy,y],
-            line: {simplify: false, color: cyan},
+            line: {simplify: false, color: (213,0,50)},
             fill:'tonexty',
             opacity: 0.5
         }
@@ -158,6 +182,57 @@ function computeArea(x, y) {
     ];
 
     return data;
+}
+
+function computePolar (x, y){
+    currentPoint = [x, y];
+
+    rho = Math.sqrt(x**2+y**2);
+    phi = Math.atan2(y,x);
+    console.log(phi);
+
+    rhoVector = new Line2d([[x,y],[x+Math.cos(phi),y+Math.sin(phi)]]);
+    phiVector = new Line2d([[x,y],[x-Math.sin(phi),y+Math.cos(phi)]]);
+    /*
+    3.  I have created new Rectangle Object for you in the objects.js, so do check it out.
+        NB: Conventions: the name of the functions start with lower case/ Objects start with UPPER case.
+        Create a 'new' rectangle using 'Rectangle' in the objects.js and name it 'dominic'.
+
+        Only then uncomment the line in the graphic object named 'data' below.
+    */
+
+    var circle = new Circle(rho);
+
+    var data = [
+ //ONLY uncomment this line when task 3. is completed.
+        {
+            type: "scatter",
+            mode: "lines+text",
+            x: [x, x+Math.cos(phi)/2, x+Math.cos(phi)],
+            y: [y, y+Math.sin(phi)/2, y+Math.sin(phi)],
+            line: {color: orange, width: 3, dash: "solid"},
+            text: ["", "r", ""],
+            textfont: {color:black, size:16}
+        },
+        {
+            type: "scatter",
+            mode: "lines+text",
+            x: [x, x-Math.sin(phi)/2, x-Math.sin(phi)],
+            y: [y, y+Math.cos(phi)/2, y+Math.cos(phi)],
+            line: {color: orange, width: 3, dash: "solid"},
+            text: ["", "ρ", ""],
+            textfont: {color:black, size:16}
+        },
+        rhoVector.gObject(cyan, 2),
+        rhoVector.arrowHead(cyan,2),
+        phiVector.gObject(cyan,2),
+        phiVector.arrowHead(cyan,2),
+
+        circle.gObject()
+    ];
+
+    return data;
+
 }
 
 /** updates the plot according to the slider controls. */
@@ -178,6 +253,8 @@ function updatePlot() {
         data = computeBasis(x, y);
     } else if (href === "#area") {
         data = computeArea(x, y);
+    } else if (href === "#polar"){
+        data = computePolar(x, y);
     }
 
     //This is animation bit.
